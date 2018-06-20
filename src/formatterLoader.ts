@@ -53,6 +53,13 @@ export function findFormatter(name: string | FormatterConstructor, formattersDir
 }
 
 function loadFormatter(directory: string, name: string, isCore?: boolean): FormatterConstructor | undefined {
+    if (directory === CORE_FORMATTERS_DIRECTORY) {
+        try {
+            return (require("./formatters/" + name.slice(0, -9) + "Formatter.js") as { Formatter: FormatterConstructor }).Formatter;
+        } catch {
+            return undefined;
+        }
+    }
     const formatterPath = path.resolve(path.join(directory, name));
     let fullPath: string;
     if (isCore) {
